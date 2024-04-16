@@ -80,13 +80,13 @@ class CampaignTarget:
         broadcast_attributes = "map.user_id AS userID"
         broadcast_mapping_table = """JOIN `sc-mjolnir.enigma.user_map_20*` AS map
             ON map.ghost_id = dau.ghost_user_id"""
-        broadcast_mapping_table_condition = """AND map._TABLE_SUFFIX = FORMAT_DATE("%y%m%d",DATE_SUB(CURRENT_DATE('America/Los_Angeles'),INTERVAL 1 DAY))"""
+        broadcast_mapping_table_condition = """AND map._TABLE_SUFFIX = FORMAT_DATE("%y%m%d",DATE_SUB(CURRENT_DATE('America/Los_Angeles'),INTERVAL 2 DAY))"""
 
         email_attributes = """id.ghost_user_id
             , CASE WHEN
               MOD(ABS(FARM_FINGERPRINT(CAST(ghost_user_id AS STRING))), 10) < 5 THEN 'treatment'
               ELSE 'control' END AS group_assignment
-            , DATE_SUB(CURRENT_DATE('America/Los_Angeles'),INTERVAL 1 DAY) AS run_date"""
+            , DATE_SUB(CURRENT_DATE('America/Los_Angeles'),INTERVAL 2 DAY) AS run_date"""
         email_bounce_cte =  """WITH email_bounce AS
             (
             SELECT
@@ -107,7 +107,7 @@ class CampaignTarget:
         email_bounce_condition = "AND e.ghost_user_id IS NULL"
         email_verified_condition = "AND id.isemailverified"
         user_cohort_table = "JOIN `sc-analytics.report_search.user_cohorts_20*` AS uc USING (ghost_user_id)"
-        user_cohort_table_condition = """AND uc._TABLE_SUFFIX = FORMAT_DATE("%y%m%d",DATE_SUB(CURRENT_DATE('America/Los_Angeles'),INTERVAL 1 DAY))"""
+        user_cohort_table_condition = """AND uc._TABLE_SUFFIX = FORMAT_DATE("%y%m%d",DATE_SUB(CURRENT_DATE('America/Los_Angeles'),INTERVAL 2 DAY))"""
         last_activity_table = "JOIN `sc-analytics.report_app.last_active_day_20*` AS la USING (ghost_user_id)"
         last_activity_table_condition = """AND la._TABLE_SUFFIX = FORMAT_DATE("%y%m%d",DATE_SUB(CURRENT_DATE('America/Los_Angeles'),INTERVAL 2 DAY))"""
         locale_condition = f"""AND uc.locale = '{self.locale}' """
@@ -171,9 +171,9 @@ class CampaignTarget:
             1 = 1
             AND dau.country IN ('{country_input}')
 
-            AND dau._TABLE_SUFFIX = FORMAT_DATE("%y%m%d",DATE_SUB(CURRENT_DATE('America/Los_Angeles'),INTERVAL 1 DAY))
-            AND id._TABLE_SUFFIX = FORMAT_DATE("%y%m%d",DATE_SUB(CURRENT_DATE('America/Los_Angeles'),INTERVAL 1 DAY))
-            AND la._TABLE_SUFFIX = FORMAT_DATE("%y%m%d",DATE_SUB(CURRENT_DATE('America/Los_Angeles'),INTERVAL 1 DAY))
+            AND dau._TABLE_SUFFIX = FORMAT_DATE("%y%m%d",DATE_SUB(CURRENT_DATE('America/Los_Angeles'),INTERVAL 2 DAY))
+            AND id._TABLE_SUFFIX = FORMAT_DATE("%y%m%d",DATE_SUB(CURRENT_DATE('America/Los_Angeles'),INTERVAL 2 DAY))
+            AND la._TABLE_SUFFIX = FORMAT_DATE("%y%m%d",DATE_SUB(CURRENT_DATE('America/Los_Angeles'),INTERVAL 2 DAY))
             {broadcast_mapping_table_condition}
             {email_bounce_condition}
             {email_verified_condition}
@@ -185,7 +185,7 @@ class CampaignTarget:
         runnable_query = f"""
             ## Create dynamic suffix
 
-            DECLARE suffix STRING DEFAULT FORMAT_DATE('%Y%m%d', DATE_SUB(CURRENT_DATE('America/Los_Angeles'), INTERVAL 1 DAY));
+            DECLARE suffix STRING DEFAULT FORMAT_DATE('%Y%m%d', DATE_SUB(CURRENT_DATE('America/Los_Angeles'), INTERVAL 2 DAY));
 
             EXECUTE IMMEDIATE \"\"\"
             CREATE OR REPLACE TABLE `{table}_\"\"\" || suffix || \"\"\"` AS
@@ -203,7 +203,7 @@ class CampaignTarget:
             FROM `{table}_20*`
             WHERE
             1=1
-            AND run_date = DATE_SUB(CURRENT_DATE('America/Los_Angeles'),INTERVAL 1 DAY)
+            AND run_date = DATE_SUB(CURRENT_DATE('America/Los_Angeles'),INTERVAL 2 DAY)
             AND group_assignment = 'treatment';
 
         """
