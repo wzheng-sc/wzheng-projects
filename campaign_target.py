@@ -3,7 +3,6 @@
 from google.cloud import bigquery
 from google.colab import auth
 from oauth2client.client import GoogleCredentials
-from IPython.display import display, Markdown
 import pandas as pd
 import numpy as np
 from datetime import date, datetime, timedelta
