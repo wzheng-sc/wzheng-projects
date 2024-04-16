@@ -36,7 +36,7 @@ class CampaignTarget:
         country_input = self.transform_country_input()
         self.validation_parameters()
         print(f' • We are creating the targeting with the following conditions:\n'
-              f' • Campaigm type:{self.campaign_type}\n'
+              f' • Campaigm type: {self.campaign_type}\n'
               f' • Community campaign: {self.is_community_campaign}\n'
               f' • Country: {country_input}\n'
               f' • l7: [{self.l7_from}, {self.l7_to}] *inclusive\n'
@@ -309,7 +309,7 @@ class CampaignTarget:
 
               # Retrieve and print the count result
               for row in count_result:
-                print(f"Total number of targeting: {row.total_rows}")
+                print(f"Total number of targeting: {row.total_rows:,}")
 
             except Exception as e:
               print(f"Failed to count the targeting: {e}")
@@ -326,7 +326,7 @@ class CampaignTarget:
               
               # # Retrieve and print the count result
               for row in count_result:
-                 print(f"Total number of targeting: {row.total_rows}")
+                 print(f"Total number of targeting: {row.total_rows:,}")
 
             except Exception as e:
               print(f"Failed to count the targeting: {e}")
