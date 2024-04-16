@@ -279,7 +279,7 @@ class CampaignTarget:
                 FROM `{table}_20*`
                 WHERE
                 1=1
-                AND run_date = DATE_SUB(CURRENT_DATE('America/Los_Angeles'),INTERVAL 1 DAY)
+                AND run_date = DATE_SUB(CURRENT_DATE('America/Los_Angeles'),INTERVAL 2 DAY)
                 AND group_assignment = 'treatment';"""
 
               view_job = client.query(view_query)
