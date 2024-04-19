@@ -268,27 +268,34 @@ class CampaignTarget:
             try:
               print("Executing...")
               query_job.result()  # Wait for the job to complete.
-              bq_view = bigquery.Table(table_view)
-              view_query = f"""
-                CREATE OR REPLACE VIEW
-                {table_view}
-                OPTIONS (expiration_timestamp=TIMESTAMP "2999-01-01 00:00:00") AS
+            
+            except Exception as e:
+              print(f"Failed to create the table: {e}")
 
-                SELECT DISTINCT
-                ghost_user_id
-                FROM `{table}_20*`
-                WHERE
-                1=1
-                AND run_date = DATE_SUB(CURRENT_DATE('America/Los_Angeles'),INTERVAL 2 DAY)
-                AND group_assignment = 'treatment';"""
+            try:
+               print("Creating email view...")
+    
+               bq_view = bigquery.Table(table_view)
+               view_query = f"""
+                    CREATE OR REPLACE VIEW
+                    {table_view}
+                    OPTIONS (expiration_timestamp=TIMESTAMP "2999-01-01 00:00:00") AS
+    
+                    SELECT DISTINCT
+                    ghost_user_id
+                    FROM `{table}_20*`
+                    WHERE
+                    1=1
+                    AND run_date = DATE_SUB(CURRENT_DATE('America/Los_Angeles'),INTERVAL 2 DAY)
+                    AND group_assignment = 'treatment';"""
 
-              view_job = client.query(view_query)
-              view_job.result()
-              count_query = f"""
-              SELECT COUNT(1) AS total_rows 
-              FROM {table_view}
-              """
-              print(f"Successfully created view at {table_view}")
+               view_job = client.query(view_query)
+               view_job.result()
+               count_query = f"""
+               SELECT COUNT(1) AS total_rows 
+               FROM {table_view}
+               """
+               print(f"Successfully created view at {table_view}")
               
             except Exception as e:
                   print(f"Failed to create view: {e}")
