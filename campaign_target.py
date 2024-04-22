@@ -14,7 +14,7 @@ class CampaignTarget:
     def __init__(self, table_name, campaign_type, is_community_campaign , country_single, country_multiple, l7_from, l7_to, l90_from, l90_to, locale, minimum_app_version):
         # Time element
         self.pstTz = pytz.timezone("America/Los_Angeles")
-        self.run_datetime = datetime.now(self.pstTz) - timedelta(days=1)
+        self.run_datetime = datetime.now(self.pstTz) - timedelta(days=2)
         self.formatted_run_date = self.run_datetime.date().strftime('%Y%m%d')
 
 
