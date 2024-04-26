@@ -224,7 +224,7 @@ class CampaignTarget:
               table_project = "email-infra-prod"
               table_prefix = "bigquery_targeting_campaigns"
               table = f"sc-product-datascience.wzheng.{self.table_name}"
-              table_with_suffix = None
+              table_with_suffix = f"""{table}_{self.formatted_run_date}"""
               table_view = '.'.join([table_project, table_prefix, self.table_name])
 
         return table, table_with_suffix, table_view
