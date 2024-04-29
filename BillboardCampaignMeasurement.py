@@ -72,23 +72,23 @@ class BillboardCampaignMeasurement:
 
     def monthly_impression_change(self, df_monthly_impression):
         fig = go.Figure(go.Waterfall(
-            name="Monthly Change (%)",
+            name="MoM%",
             orientation="v",  # Vertical orientation
-            measure=["relative"] * (len(df_monthly_impression) - 1),  # First measure is absolute, others are relative
+            measure=["relative"] * (len(df_monthly_impression) - 1),  
             x=df_monthly_impression['month'].astype(str),  # X-axis labels
             textposition="outside",
-            y=df_monthly_impression['impression_count_mom%'].fillna(0).tolist()[1:],  # Start from 0 for absolute, use pct_change for others
+            y=df_monthly_impression['impression_count_mom%'].fillna(0).tolist()[1:],  #
             connector={"line":{"color":"rgb(63, 63, 63)"}},  # Line color between bars
             increasing={"marker":{"color":"green"}},  # Color for increase
             decreasing={"marker":{"color":"red"}},  # Color for decrease
-            totals={"marker":{"color":"blue"}}  # Color for totals
+            totals={"marker":{"color":"blue"}}  
         ))
 
         fig.update_layout(
-            title="Month-over-Month Overall Impression Percentage Change",
+            title="Month-over-Month Overall Impression Percentage Difference",
             showlegend=True,
             yaxis=dict(
-                title='Percentage Change',
+                title='Percentage Difference',
                 ticksuffix='%'
             )
         )
@@ -193,8 +193,9 @@ class BillboardCampaignMeasurement:
       print("\nTable 1: Overall Summary")
       display(df_summary)
 
-      print("\nChart 1: Monthly Impression Distribution")
+      print("\nChart 1: Trend of Overall Impression Percentage Difference")
       self.monthly_impression_change(df_monthly_impression)
+      display(df_monthly_impression)
 
       print("\nTable 2: Surface Summary - Campaign Count")
       display(df_surface_campaign_summary)
