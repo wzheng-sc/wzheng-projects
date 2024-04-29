@@ -270,7 +270,7 @@ class BillboardCampaignMeasurement:
 
         df_conversion_campaign_merged.to_csv(f'billboard_measurement{self.quarter_formatted}.csv', index = False)
         files.download(f'billboard_measurement{self.quarter_formatted}.csv')
-        print(f"\n ** A complete list of campaigns is downloaded. Check file 'billboard_measurement{self.quarter_formatted}.csv' in your Download folder!")
+        print(f"\n ** A complete list of campaigns is downloaded. Check file 'billboard_measurement_{self.quarter_formatted}.csv' in your Download folder!")
 
 
 
