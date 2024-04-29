@@ -18,7 +18,7 @@ class BillboardCampaignMeasurement:
         self.end_date_dt = pd.to_datetime(end_date)
         self.quarter_formatted = f"{self.end_date_dt.year}Q{self.end_date_dt.quarter}"
         self.lookback_quarters = lookback_quarters
-        self.start_date_dt = self.end_date_dt - DateOffset(months=3 * (self.lookback_quarters+1))
+        self.start_date_dt = self.end_date_dt - DateOffset(months=3 * self.lookback_quarters)
         self.start_date_str = self.start_date_dt.strftime('%y%m%d')
         self.end_date_str = self.end_date_dt.strftime('%y%m%d')
 
