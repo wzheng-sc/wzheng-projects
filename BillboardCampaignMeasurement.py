@@ -187,7 +187,7 @@ class BillboardCampaignMeasurement:
       print(f"• In {self.quarter_formatted}, we sent {campaign_count_value} billboard campaigns (with >20K impressions).")
       print(f"• {fhp_campaign_count_value} FHP, {fst_campaign_count_value} FST, and {pac_campaign_count_value} PAC.")
       print(f"• We received {impression_count_value/1000000000:.1f}B impression from these three surfaces.")
-      print(f"• Here are the campaign ids unique in this quarter, but not seen in last {self.lookback_quarters} quarter:", unique_to_this_quarter)
+      print(f"• Here are the campaign ids unique in this quarter, but not seen in past {self.lookback_quarters} quarter(s):", unique_to_this_quarter)
       print("\n")
 
       display(Markdown("**Here is a high level summary:**"))
