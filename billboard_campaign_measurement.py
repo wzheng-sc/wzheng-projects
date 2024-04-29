@@ -12,7 +12,7 @@ import plotly.graph_objects as go
 auth.authenticate_user()
 
 
-class billboard_quartly_measurement:
+class BillboardCampaignMeasurement:
     def __init__(self, end_date, lookback_quarters):
         self.client = bigquery.Client(project='feelinsonice-hrd')
         self.end_date_dt = pd.to_datetime(end_date)
@@ -143,7 +143,7 @@ class billboard_quartly_measurement:
       this_quarter_campaigns = self.df[self.df['quarter'] == self.quarter_formatted]['campaign_id'].unique()
       this_quarter_campaigns = set([x.upper() for x in this_quarter_campaigns if isinstance(x, str)])
 
-      previous_quarters_campaigns = self.df[self.df['quarter'] != quarter_formatted]['campaign_id'].unique()
+      previous_quarters_campaigns = self.df[self.df['quarter'] != self.quarter_formatted]['campaign_id'].unique()
       previous_quarters_campaigns = set([x.upper() for x in previous_quarters_campaigns if isinstance(x, str)])  # Convert to uppercase
 
       unique_to_this_quarter = this_quarter_campaigns.difference(previous_quarters_campaigns)
