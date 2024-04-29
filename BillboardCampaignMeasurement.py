@@ -39,7 +39,6 @@ class BillboardCampaignMeasurement:
         self.df = self.run_query(campaign_query)
         self.df['quarter'] = pd.PeriodIndex(self.df['ts'], freq='Q').strftime('%YQ%q')
         self.df['month'] = pd.PeriodIndex(self.df['ts'], freq='M').strftime('%Y-%m')
-        self.df['grouped_action'] = np.where(self.df['action']=='CLICK_EXTRA_BUTTON', 'CLICK', self.df['action'])
 
     def run_user_queries(self):
         user_query = f"""
@@ -225,10 +224,10 @@ class BillboardCampaignMeasurement:
 
 
         #conversion at overall and campaign level
-        df_conversion = self.df.pivot_table(index=['surface', 'quarter'], columns='grouped_action', values='action_cnt', aggfunc='sum', fill_value=0)
+        df_conversion = self.df.pivot_table(index=['surface', 'quarter'], columns='action', values='action_cnt', aggfunc='sum', fill_value=0)
         df_conversion['overall_ctr'] = np.round(df_conversion['CLICK'] / df_conversion['IMPRESSION'],4)
         df_conversion['overall_dismiss_rate'] = np.round(df_conversion['DISMISS'] / df_conversion['IMPRESSION'],4)
-        df_conversion_campaign_level = self.df[self.df['quarter']== self.quarter_formatted].pivot_table(index=['surface', 'campaign_id'], columns='grouped_action', values='action_cnt', aggfunc='sum', fill_value=0)
+        df_conversion_campaign_level = self.df[self.df['quarter']== self.quarter_formatted].pivot_table(index=['surface', 'campaign_id'], columns='action', values='action_cnt', aggfunc='sum', fill_value=0)
         df_conversion_campaign_level['campaign_ctr'] = np.round(df_conversion_campaign_level['CLICK'] / df_conversion_campaign_level['IMPRESSION'],4)
         df_conversion_campaign_level['campaign_dismiss_rate'] = np.round(df_conversion_campaign_level['DISMISS'] / df_conversion_campaign_level['IMPRESSION'],4)
         df_conversion_subset = df_conversion[['overall_ctr', 'overall_dismiss_rate']].xs(self.quarter_formatted, level = 'quarter')
