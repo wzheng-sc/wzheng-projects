@@ -235,8 +235,8 @@ class BillboardCampaignMeasurement:
         df_conversion_campaign_merged = df_conversion_campaign_level.reset_index().merge(df_conversion_subset, on = 'surface')
 
         # construct FHP and FST dataframes for visualization and summary
-        df_campaign_level_fhp = df_conversion_campaign_merged[df_conversion_campaign_merged['surface']=='FEED_HEADER_PROMPT'].drop(['CLICK', 'DISMISS'], axis = 1)
-        df_campaign_level_fst = df_conversion_campaign_merged[df_conversion_campaign_merged['surface']=='FULL_SCREEN_TAKEOVER'].drop(['CLICK', 'DISMISS'], axis = 1)
+        df_campaign_level_fhp = df_conversion_campaign_merged[df_conversion_campaign_merged['surface']=='FEED_HEADER_PROMPT'].drop(['CLICK','CLICK_EXTRA_BUTTON','DISMISS'], axis = 1)
+        df_campaign_level_fst = df_conversion_campaign_merged[df_conversion_campaign_merged['surface']=='FULL_SCREEN_TAKEOVER'].drop(['CLICK','CLICK_EXTRA_BUTTON','DISMISS'], axis = 1)
         df_campaign_level_fhp.columns.name = None
         df_campaign_level_fst.columns.name = None
 
