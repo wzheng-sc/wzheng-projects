@@ -17,7 +17,8 @@ class BillboardCampaignMeasurement:
         self.client = bigquery.Client(project='feelinsonice-hrd')
         self.end_date_dt = pd.to_datetime(end_date)
         self.quarter_formatted = f"{self.end_date_dt.year}Q{self.end_date_dt.quarter}"
-        self.start_date_dt = self.end_date_dt - DateOffset(months=3 * (lookback_quarters+1))
+        self.lookback_quarters = lookback_quarters
+        self.start_date_dt = self.end_date_dt - DateOffset(months=3 * (self.lookback_quarters+1))
         self.start_date_str = self.start_date_dt.strftime('%y%m%d')
         self.end_date_str = self.end_date_dt.strftime('%y%m%d')
 
@@ -186,7 +187,7 @@ class BillboardCampaignMeasurement:
       print(f"• In {self.quarter_formatted}, we sent {campaign_count_value} billboard campaigns (with >20K impressions).")
       print(f"• {fhp_campaign_count_value} FHP, {fst_campaign_count_value} FST, and {pac_campaign_count_value} PAC.")
       print(f"• We received {impression_count_value/1000000000:.1f}B impression from these three surfaces.")
-      print(f"• Here are the campaign ids unique in this quarter, but not seen in last {lookback_quarters} quarter:", unique_to_this_quarter)
+      print(f"• Here are the campaign ids unique in this quarter, but not seen in last {self.lookback_quarters} quarter:", unique_to_this_quarter)
       print("\n")
 
       display(Markdown("**Here is a high level summary:**"))
