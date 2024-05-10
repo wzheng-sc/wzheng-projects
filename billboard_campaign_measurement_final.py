@@ -33,7 +33,7 @@ class BillboardCampaignMeasurement:
     def run_campaign_queries(self):
         campaign_query = f'''
         SELECT *
-        FROM ``sc-analytics.report_growth.billboard_campaign_summary_quarterly_20*``
+        FROM `sc-analytics.report_growth.billboard_campaign_summary_quarterly_20*`
         WHERE 1=1
         AND _TABLE_SUFFIX BETWEEN '{self.start_date_str}' AND '{self.end_date_str}'
         AND campaign_id != ''
