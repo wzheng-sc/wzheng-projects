@@ -33,7 +33,7 @@ class BillboardCampaignMeasurement:
     def run_campaign_queries(self):
         campaign_query = f'''
         SELECT *
-        FROM `sc-product-datascience.wzheng.billboard_campaign_20*`
+        FROM ``sc-analytics.report_growth.billboard_campaign_summary_quarterly_20*``
         WHERE 1=1
         AND _TABLE_SUFFIX BETWEEN '{self.start_date_str}' AND '{self.end_date_str}'
         AND campaign_id != ''
@@ -45,7 +45,7 @@ class BillboardCampaignMeasurement:
     def run_user_queries(self):
         user_query = f"""
         SELECT *
-        FROM `sc-product-datascience.wzheng.billboard_campaign_event_user_level_20*`
+        FROM `sc-analytics.report_growth.billboard_campaign_user_summary_quarterly_20*`
         WHERE _TABLE_SUFFIX BETWEEN '{self.start_date_str}' AND '{self.end_date_str}'
         """
         self.df_user = self.run_query(user_query)
@@ -54,7 +54,7 @@ class BillboardCampaignMeasurement:
       try:
         multi_impression_query = f"""
         select *
-        from `sc-product-datascience.wzheng.billboard_campaign_event_multi_impression_20*`
+        from `sc-analytics.report_growth.billboard_campaign_impression_efficiency_quarterly_20*`
         where _TABLE_SUFFIX BETWEEN '{self.start_date_str}' AND '{self.end_date_str}'
         and quarter = '{self.quarter_formatted}'
         """
