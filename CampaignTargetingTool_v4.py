@@ -227,14 +227,14 @@ class CampaignTarget:
             {identity_table}
             {last_activity_table}
             {community_table}
-            {community_condition}
+            {community_table_condition}
             {email_bounce_table}
             WHERE
             1 = 1
             AND uc._TABLE_SUFFIX = FORMAT_DATE("%y%m%d",DATE_SUB(CURRENT_DATE('America/Los_Angeles'),INTERVAL 2 DAY))
             {identity_table_condition}
             {last_activity_table_condition}
-            {community_table_condition}
+            {community_condition}
             {email_bounce_condition}
             {email_verified_condition}
             {l_7_condition}
