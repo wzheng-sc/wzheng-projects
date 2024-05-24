@@ -42,7 +42,6 @@ class CampaignTarget:
         self.table_name = table_name
         self.table_to_delete = table_to_delete
         self.campaign_type = campaign_type
-        self.is_community_campaign = is_community_campaign
         self.country_single = country_single
         self.country_multiple = country_multiple
         self.l7_sign = l7_sign
@@ -176,7 +175,7 @@ class CampaignTarget:
         l_90_condition = f"AND la.l_90 {self.l90_sign}{self.l90_value}"
         app_condition = f"""AND (CAST(SPLIT(id.version, '.')[SAFE_OFFSET(0)] AS INT)*1e2 + CAST(SPLIT(id.version, '.')[SAFE_OFFSET(1)] AS INT))/100.0 >= {self.minimum_app_version_value}"""
         age_condition = f"""AND id.age between {self.age_from} and {self.age_to}"""
-        community_condition = f"""AND community.ghost_user_id IS NOT NULL""" if is_community_member else f"""AND community.ghost_user_id IS NULL"""
+        community_condition = f"""AND community.ghost_user_id IS NOT NULL""" if self.is_community_member else f"""AND community.ghost_user_id IS NULL"""
 
         country_input = self.transform_country_input()
         table, table_with_suffix, table_view = self.table_config()
