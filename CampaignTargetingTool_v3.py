@@ -163,11 +163,9 @@ class CampaignTarget:
         email_verified_condition = "AND id.isemailverified"
         identity_table = "JOIN  `sc-analytics.report_user.identity_20*` AS id USING (ghost_user_id)"
         identity_table_condition = """AND id._TABLE_SUFFIX = FORMAT_DATE("%y%m%d",DATE_SUB(CURRENT_DATE('America/Los_Angeles'),INTERVAL 2 DAY))"""
-        # user_cohort_table = "JOIN `sc-analytics.report_search.user_cohorts_20*` AS uc USING (ghost_user_id)"
-        # user_cohort_table_condition = """AND uc._TABLE_SUFFIX = FORMAT_DATE("%y%m%d",DATE_SUB(CURRENT_DATE('America/Los_Angeles'),INTERVAL 2 DAY))"""
         last_activity_table = "JOIN `sc-analytics.report_app.last_active_day_20*` AS la USING (ghost_user_id)"
         last_activity_table_condition = """AND la._TABLE_SUFFIX = FORMAT_DATE("%y%m%d",DATE_SUB(CURRENT_DATE('America/Los_Angeles'),INTERVAL 2 DAY))"""
-        community_table = "LEFT JOIN `sc-analytics.report_growth.community_custom_group_staging_20*` AS community USING (ghost_user_id)"
+        community_table = "LEFT JOIN `sc-analytics.report_growth.community_custom_group_staging_20*` AS community ON community.ghost_user_id = uc.ghost_user_id"
         community_table_condition = """AND community._TABLE_SUFFIX = FORMAT_DATE("%y%m%d",DATE_SUB(CURRENT_DATE('America/Los_Angeles'),INTERVAL 2 DAY))"""
 
         locale_condition = f"""AND UPPER(uc.locale) LIKE '{self.locale}%' """
