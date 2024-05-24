@@ -225,10 +225,10 @@ class CampaignTarget:
             {broadcast_attributes}
 
             FROM `sc-analytics.report_search.user_cohorts_20*` AS uc
+            {broadcast_mapping_table}
             {identity_table}
             {last_activity_table}
             {community_table}
-            {broadcast_mapping_table}
             {email_bounce_table}
             WHERE
             1 = 1
