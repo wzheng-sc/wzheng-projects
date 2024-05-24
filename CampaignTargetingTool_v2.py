@@ -229,6 +229,7 @@ class CampaignTarget:
             {identity_table}
             {last_activity_table}
             {community_table}
+            {community_condition}
             {email_bounce_table}
             WHERE
             1 = 1
@@ -238,7 +239,6 @@ class CampaignTarget:
             {community_table_condition}
             {email_bounce_condition}
             {email_verified_condition}
-            {community_condition}
             {l_7_condition}
             {l_90_condition}
             {app_condition}
