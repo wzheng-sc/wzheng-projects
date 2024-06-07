@@ -37,7 +37,7 @@ class BillboardCampaignMeasurement:
         WHERE 1=1
         AND _TABLE_SUFFIX BETWEEN '{self.start_date_str}' AND '{self.end_date_str}'
         AND campaign_id != ''
-        AND action IN ('IMPRESSION','CLICK','DIMISS')
+        AND action IN ('IMPRESSION','CLICK','DISMISS')
         '''
         self.df = self.run_query(campaign_query)
         self.df['quarter'] = pd.PeriodIndex(self.df['ts'], freq='Q').strftime('%YQ%q')
