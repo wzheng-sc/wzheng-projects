@@ -71,7 +71,11 @@ class CampaignTarget:
         elif self.country_multiple == '':
             country_input = self.country_single
         else:
-            country_input = self.country_multiple
+            country_codes = multiple_country.split(", ")
+            formatted_string = "', '".join(country_codes)
+            formatted_string = "'" + formatted_string + "'"
+            country_input = formatted_string
+            
         return country_input
 
 
