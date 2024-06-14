@@ -64,7 +64,7 @@ class CampaignTarget:
         print(f'We are creating the targeting with the following conditions:'
               f'\n'
               f' • Campaigm type: {self.campaign_type}\n'
-              f' • Country: {country_input}\n'
+              f""" • Country: '{country_input}'\n"""
               f' • Locale: {self.locale}')
         #L7
         if self.l7_sign == "not required":
@@ -127,9 +127,8 @@ class CampaignTarget:
         elif self.country_multiple == '':
             country_input = self.country_single
         else:
-            country_codes = multiple_country.split(", ")
+            country_codes = self.country_multiple.split(", ")
             formatted_string = "', '".join(country_codes)
-            formatted_string = "'" + formatted_string + "'"
             country_input = formatted_string
             
         return country_input
