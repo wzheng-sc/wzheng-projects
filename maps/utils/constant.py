@@ -110,12 +110,12 @@ def get_viral_places_query(start_date: str,
 VIDEO_REQUIRED_KEYS = [
     "short_description", "long_description", "keywords",
     "event_type", "event_scale", "event_duration",
-    "event_intensity", "associated_mood", "key_objects_entities",
+    "event_intensity", "associated_mood", "key_objects",
     "activity_type", "contributing_context", "virality_potential"
 ]
 
 PLACE_REQUIRED_KEYS = [
-    "key_objects_entities", "activity_type",
+    "key_objects", "activity_type",
     "contributing_context",
     "short_description", "long_description",
     "keywords", "consistency", 
@@ -127,7 +127,7 @@ PLACE_MAJORITY_COLS = [
     'associated_mood', 
 ]
 PLACE_LIST_COLS = [
-    'keywords', 'key_objects_entities', 'activity_type', 'contributing_context',
+    'keywords', 'key_objects', 'activity_type', 'contributing_context',
 ]
 
 # 1. Define the complete aggregation dictionary
@@ -165,12 +165,12 @@ SELECTED_COLS = ['place_id','place_name', 'place_country_code',
        'gcs_url', 'video_labels', 'video_prompt_tokens',
        'video_completion_tokens', 'short_description', 'long_description',
        'keywords', 'event_type', 'event_scale', 'event_duration',
-       'event_intensity', 'associated_mood', 'key_objects_entities',
+       'event_intensity', 'associated_mood', 'key_objects',
        'activity_type', 'contributing_context', 'virality_potential'
 ]
 
 STORY_COLS_RENAME = ['short_description', 'long_description',
        'keywords', 'event_type', 'event_scale', 'event_duration',
-       'event_intensity', 'associated_mood', 'key_objects_entities',
+       'event_intensity', 'associated_mood', 'key_objects',
        'activity_type', 'contributing_context', 'virality_potential'
 ]

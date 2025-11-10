@@ -132,6 +132,16 @@ def _list_to_str(v, sep: str = ', '):
     lst = _to_list(v)
     return sep.join(lst) if lst else ''
 
+def _format_token_case(s: str) -> str:
+    s = str(s).strip()
+    return (s[:1].upper() + s[1:].lower()) if s else ''
+
+def _list_to_str_cased(v, sep: str = ', '):
+    lst = _to_list(v)
+    if not lst:
+        return ''
+    return sep.join(_format_token_case(t) for t in lst if str(t).strip())
+
 def parse_incident_json_broken(json_like) -> dict:
     result = {
         'short_description': '',
@@ -163,10 +173,11 @@ def parse_incident_json_broken(json_like) -> dict:
         result['event_duration']        = d.get('event_duration', '') or ''
         result['event_intensity']       = d.get('event_intensity', '') or ''
         result['associated_mood']       = d.get('associated_mood', '') or ''
-        result['keywords']              = _list_to_str(d.get('keywords'))
-        result['key_objects_entities']  = _list_to_str(d.get('key_objects_entities'))
-        result['activity_type']         = _list_to_str(d.get('activity_type'))
-        result['contributing_context']  = _list_to_str(d.get('contributing_context'))
+        result['keywords']              = _list_to_str_cased(d.get('keywords'))
+        result['key_objects_entities']  = _list_to_str_cased(d.get('key_objects_entities'))
+        result['activity_type']         = _list_to_str_cased(d.get('activity_type'))
+        # accept alternate key if present
+        result['contributing_context']  = _list_to_str_cased(d.get('contributing_context'))
         # support multiple possible key names
         _vp = None
         for key in ('virality_potential', 'viral_potential', 'viralityPotential'):
@@ -188,7 +199,7 @@ def parse_incident_json_broken(json_like) -> dict:
 
     s = json_like.strip()
 
-    # --- 2) Try Python literal first (handles single quotes etc.)
+    # --- 2) Try Python literal first (handles single quotes)
     try:
         d = ast.literal_eval(s)
         if isinstance(d, dict):
@@ -238,14 +249,17 @@ def parse_incident_json_broken(json_like) -> dict:
     result['event_duration']        = grab_str_any('event_duration')
     result['event_intensity']       = grab_str_any('event_intensity')
     result['associated_mood']       = grab_str_any('associated_mood')
-    result['keywords']              = ', '.join(grab_list('keywords')) or ''
-    result['key_objects_entities']  = ', '.join(grab_list('key_objects_entities')) or ''
-    result['activity_type']         = ', '.join(grab_list('activity_type')) or ''
-    result['contributing_context']  = ', '.join(grab_list('contributing_context')) or ''
+    # cased tokens for list-like fields
+    kw = [_format_token_case(t) for t in grab_list('keywords')]
+    koe = [_format_token_case(t) for t in grab_list('key_objects_entities')]
+    act = [_format_token_case(t) for t in grab_list('activity_type')]
+    cc = [_format_token_case(t) for t in grab_list('contributing_context')]
+    result['keywords']              = ', '.join(kw)  or ''
+    result['key_objects_entities']  = ', '.join(koe) or ''
+    result['activity_type']         = ', '.join(act) or ''
+    result['contributing_context']  = ', '.join(cc)  or ''
     # primary, with fallbacks
     vp = grab_float('virality_potential', None)
-    if vp is None:
-        vp = grab_float('viral_potential', None)
     if vp is None:
         vp = grab_float('viralityPotential', 0.0)
     result['virality_potential']    = vp
@@ -256,7 +270,6 @@ def parse_incident_json_broken(json_like) -> dict:
     result['detection_start_time']  = pd.to_datetime(ds, errors='coerce') if ds else None
     result['detection_end_time']    = pd.to_datetime(de, errors='coerce') if de else None
 
-    # the problematic fields
     result['place_id']              = grab_str_any('place_id')
     result['place_country_code']    = grab_str_any('place_country_code')
     result['consistency']           = grab_float('consistency', 0.0)

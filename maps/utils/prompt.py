@@ -17,12 +17,12 @@ VIDEO_CLASSIFIER_PROMPT = """
             'long_description': str,    # under 60 words
             'keywords': list[str],      # up to 10 items
 
-            'event_type': str,          # one of: 'Social Gathering' | 'Natural Phenomenon'| 'Human Activity (Non-Social)'| 'Landmark or Tourist Attraction'| 'Transportation Related'| 'Business or Commercial'| 'Miscellaneous or Other'
+            'event_type': str,          # one of: 'Social Gathering' | 'Natural Phenomenon'| 'Human Activity (Non-Social)'| 'Landmark'| 'Transportation Related'| 'Commercial'| 'Miscellaneous'
             'event_scale': str,         # once of: 'Local' | 'Regional' | 'National' | 'International'
             'event_duration': str,      # once of:'Instantaneous' | 'Short-term' | 'Medium-term' | 'Long-term'
             'event_intensity': str,     # once of:'Low' | 'Medium' | 'High' | 'Critical'
             'associated_mood': str,     # once of:'Positive' | 'Neutral' | 'Negative'
-            'key_objects_entities': list[str], # up to 3 items
+            'key_objects': list[str], # up to 3 items
             'activity_type': list[str], # up to 3 items
             'contributing_context': list[str], # up to 3 items
             'virality_potential': float, # a binary score, indicating the potential of the event to go viral
@@ -36,10 +36,10 @@ VIDEO_CLASSIFIER_PROMPT = """
         - 'Social Gathering': party, concerts, protests, markets, parades, sports, festivals, community meetups, etc.   
         - 'Natural Phenomenon': storms, floods, auroras, wildfires, etc.  Storm, Flood, Aurora, Wildfire, etc.
         - 'Human Activity (Non-Social)': construction, emergency response, maintenance, filming, demonstration,etc. 
-        - 'Landmark or Tourist Attraction': parks, museums, monuments, beaches, historical sites, etc. 
+        - 'Landmark': parks, museums, monuments, beaches, historical sites, etc. 
         - 'Transportation Related': accidents, closures, congestion, arrivals, delays, etc.  
-        - 'Business or Commercial': openings, sales, product launches, pop-ups, etc. 
-        - 'Miscellaneous or Other': anything uncategorized or local incident. 
+        - 'Commercial': openings, sales, product launches, pop-ups, etc. 
+        - 'Miscellaneous': anything uncategorized or local incident. 
 
         **Event Scale (event_scale)**
         - 'Local': events that occur within a specific neighborhood or community.
@@ -64,7 +64,7 @@ VIDEO_CLASSIFIER_PROMPT = """
         - 'Neutral': Ordinary, Routine, Informative, Not Emotional, Not expressive, etc.
         - 'Negative': Angry, Frustrated, Disengaged, Unsafe, etc.
 
-        **Key Objects or Entities (key_objects_entities)** :
+        **Key Objects (key_objects)** :
         This category identifies prominent objects or entities that are central to the event. It can be sourced from keywords.
         - Example Values: People (crowd, individuals), Vehicles (cars, buses, emergency vehicles), Buildings (damaged, historical), Natural Elements (trees, water), Equipment (construction, stage), Animals, Specific Props (balloons, signs, flags), etc.
 
@@ -97,7 +97,7 @@ VIDEO_CLASSIFIER_PROMPT = """
             'event_duration': 'Short-term',
             'event_intensity': 'High',
             'associated_mood': 'Positive',
-            'key_objects_entities': ['crowd', 'stage', 'lights'],
+            'key_objects': ['crowd', 'stage', 'lights'],
             'activity_type': ['dancing', 'performing', 'listening'],
             'contributing_context': ['night', 'outdoor'],
             'virality_potential': 1.0
@@ -128,7 +128,7 @@ TEXT_CLASSIFIER_PROMPT = """
         - event_duration (str): the event duration of the place, calculated by the majority vote of the event durations of the videos.
         - event_intensity (str): the event intensity of the place, calculated by the majority vote of the event intensities of the videos.
         - associated_mood (str): the associated mood of the place, calculated by the majority vote of the associated moods of the videos.
-        - key_objects_entities (str): the key objects or entities of the place, calculated by consolidating the key objects or entities of the videos.
+        - key_objects (str): the key objects or entities of the place, calculated by consolidating the key objects or entities of the videos.
         - activity_type (str): the activity type of the place, calculated by consolidating the activity types of the videos.
         - contributing_context (str): the contributing context of the place, calculated by consolidating the contributing contexts of the videos.
         - short_description (str): LLM generated short descriptions from the videos of the place, separated by '|'
@@ -140,7 +140,7 @@ TEXT_CLASSIFIER_PROMPT = """
         {   'place_id': str,
             'place_country_code': str,
             'keywords': list[str], # up to 10 items
-            'key_objects_entities': list[str], # up to 3 items
+            'key_objects': list[str], # up to 3 items
             'activity_type': list[str], # up to 3 items
             'contributing_context': list[str], # up to 3 items
             'short_description': str,   # under 10 words
