@@ -15,7 +15,7 @@ def get_viral_places_query(start_date: str,
             MAX(TIMESTAMP_MILLIS(CAST(submit_ts AS INT64))) AS submit_ts,
             MAX(IF(unencrypted_flat_video_result_url != '', unencrypted_flat_video_result_url, media_url)) AS media_url
             FROM `context-pii.snapjoin.our_story_snap_2025*`
-            WHERE _TABLE_SUFFIX BETWEEN RIGHT(FORMAT_DATE('%Y%m%d', DATE_SUB(PARSE_DATE('%Y%m%d', '{start_date}'), INTERVAL 3 DAY)), 4) AND RIGHT('{end_date}', 4)
+            WHERE _TABLE_SUFFIX BETWEEN RIGHT(FORMAT_DATE('%Y%m%d', DATE_SUB(PARSE_DATE('%Y%m%d', '{start_date}'), INTERVAL 1 DAY)), 4) AND RIGHT('{end_date}', 4)
             GROUP BY 1),
 
             viral_places_staging AS 
@@ -30,7 +30,8 @@ def get_viral_places_query(start_date: str,
             place_country, 
             MIN(event_time) AS detection_start_time,
             MAX(event_time) AS detection_end_time,
-            FROM `sc-analytics.report_maps.maps_ttp_demand_detection_result_locality_stories_*`
+            # FROM `sc-analytics.report_maps.maps_ttp_demand_detection_result_locality_stories_*`
+            FROM `sc-product-datascience.wzheng.maps_viral_place_locality_stories_*`
             WHERE 1=1
             AND DATE(event_time) BETWEEN PARSE_DATE('%Y%m%d', '{start_date}') AND PARSE_DATE('%Y%m%d', '{end_date}')
             GROUP BY ALL
@@ -46,11 +47,13 @@ def get_viral_places_query(start_date: str,
             stories.place_country, 
             stories.story_snap_id, 
             stories.story_link, 
+            stories.venue_name,
             MIN(viral_places_staging.detection_start_time) AS detection_start_time,
             MAX(viral_places_staging.detection_end_time) AS detection_end_time,
             MAX(stories.time_viewed_total_day) AS time_viewed_total_day, 
             MAX(stories.heatmap_story_views_total_day) AS heatmap_story_views_total_day,
-            FROM `sc-analytics.report_maps.maps_ttp_demand_detection_result_locality_stories_*` AS stories
+            # FROM `sc-analytics.report_maps.maps_ttp_demand_detection_result_locality_stories_*` AS stories
+            FROM `sc-product-datascience.wzheng.maps_viral_place_locality_stories_*` AS stories
             LEFT JOIN viral_places_staging 
             USING (place_id)
             LEFT JOIN urls 
@@ -72,6 +75,7 @@ def get_viral_places_query(start_date: str,
             stories.place_country, 
             stories.story_snap_id, 
             stories.story_link, 
+            stories.venue_name,
             stories.detection_start_time,
             stories.detection_end_time,
             stories.time_viewed_total_day, 
@@ -94,6 +98,7 @@ def get_viral_places_query(start_date: str,
             place_country,
             story_snap_id,
             story_link,
+            venue_name,
             detection_start_time,
             detection_end_time,
             time_viewed_total_day,
@@ -159,7 +164,7 @@ place_agg_dict = PLACE_AGG_DICT
 
 SELECTED_COLS = ['place_id','place_name', 'place_country_code', 
        'detection_start_time', 'detection_end_time',
-       'story_snap_id', 'story_link', 'detection_start_time', 'detection_end_time',
+       'story_snap_id', 'story_link', 'venue_name', 'detection_start_time', 'detection_end_time',
        'time_viewed_total_day', 'heatmap_story_views_total_day',
        'story_views_rank', 'story_freshness_rank', 'media_url', 'score',
        'gcs_url', 'video_labels', 'video_prompt_tokens',

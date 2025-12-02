@@ -22,7 +22,7 @@ VIDEO_CLASSIFIER_PROMPT = """
             'event_duration': str,      # once of:'Instantaneous' | 'Short-term' | 'Medium-term' | 'Long-term'
             'event_intensity': str,     # once of:'Low' | 'Medium' | 'High' | 'Critical'
             'associated_mood': str,     # once of:'Positive' | 'Neutral' | 'Negative'
-            'key_objects': list[str], # up to 3 items
+            'key_objects': list[str], # up to 3 items. Include brand names if detected any.
             'activity_type': list[str], # up to 3 items
             'contributing_context': list[str], # up to 3 items
             'virality_potential': float, # a binary score, indicating the potential of the event to go viral
@@ -109,17 +109,19 @@ TEXT_CLASSIFIER_PROMPT = """
         You are a multimodal model specialize in summarizing and generalizing words and phrases from a text.
         This project is about viral places detections. The places have been identified as places going viral.
         My input is places descriptions that are generated from multiple videos using LLM. Now, I want to summarize
-        and generalize the descriptions from multiple videos separated by '|' into a single description and consolidate
-        keywords separated by ',' for each place.
-
-        Remember, there could be discrepancies in the descriptions, and the descriptions are not always accurate. Using
-        the majority votes or the best knowledge from local news using the detection_start_time and detection_end_time.
+        the descriptions from multiple videos separated by '|' into a single description and consolidate
+        keywords separated by ',' for each place. Keep in mind that there may be discrepancies in the descriptions, and they’re not always reliable. 
+        Use the majority votes for summarization and consolidation. 
+        Add more context in description if possible by referencing local news using the detection_start_time (UTC), detection_end_time (UTC), and place_name or venue_name (if available).
+        For example, if there is a local or reginal sports game (e.g. NFL, NBA, MLB, NHL, etc.), concerts, festivals, protests, etc. happening at the place around the same time, 
+        the description should be updated to include the details, such as what game (teams)/concert/festival/protest it is.
 
         **Input**
         - place_id (str): the id of the place
         - continent (str): the continent of the place
         - place_name (str): the name of the place
         - place_country_code (str): the country code of the place
+        - venue_name (str): the name of the venue of the place. Some entries may not have a venue name.
         - detection_start_time (datetime): the first timestamp for viral detection
         - detection_end_time (datetime): the last reported timestamp for viral detection. Note, the actual end time of the viral event could be different.
         - virality_potential (float): the virality potential of the place, calculated by the average of the virality potential of the videos.
@@ -133,7 +135,7 @@ TEXT_CLASSIFIER_PROMPT = """
         - contributing_context (str): the contributing context of the place, calculated by consolidating the contributing contexts of the videos.
         - short_description (str): LLM generated short descriptions from the videos of the place, separated by '|'
         - long_description (str): LLM generated long descriptions from the videos of the place, separated by '|'
-        - keywords (str): the keywords of the place, separated by ','.
+        - keywords (str): the keywords of the place, separated by ','. Include brand names if detected any.
         - media_url (str): the media url of the videos of the place.
 
         **Output Format (Python dictionary)**
@@ -144,7 +146,7 @@ TEXT_CLASSIFIER_PROMPT = """
             'activity_type': list[str], # up to 3 items
             'contributing_context': list[str], # up to 3 items
             'short_description': str,   # under 10 words
-            'long_description': str,    # under 60 words
+            'long_description': str,    # under 60 words. Add more context from local news if possible.
             'consistency': float, # the consistency of the video descriptions, calculated by the consistency of the long descriptions of the videos. numerator is the number of videos with the long description sharing the same concept, denominator is the total number of videos.
 
 """

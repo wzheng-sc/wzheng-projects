@@ -134,7 +134,8 @@ def _list_to_str(v, sep: str = ', '):
 
 def _format_token_case(s: str) -> str:
     s = str(s).strip()
-    return (s[:1].upper() + s[1:].lower()) if s else ''
+    # .title() capitalizes the first letter of every word
+    return s.title() if s else ''
 
 def _list_to_str_cased(v, sep: str = ', '):
     lst = _to_list(v)
@@ -152,7 +153,7 @@ def parse_incident_json_broken(json_like) -> dict:
         'event_duration': '',
         'event_intensity': '',
         'associated_mood': '',
-        'key_objects_entities': '',
+        'key_objects': '',
         'activity_type': '',
         'contributing_context': '',
         'virality_potential': 0.0,
@@ -174,7 +175,7 @@ def parse_incident_json_broken(json_like) -> dict:
         result['event_intensity']       = d.get('event_intensity', '') or ''
         result['associated_mood']       = d.get('associated_mood', '') or ''
         result['keywords']              = _list_to_str_cased(d.get('keywords'))
-        result['key_objects_entities']  = _list_to_str_cased(d.get('key_objects_entities'))
+        result['key_objects']  = _list_to_str_cased(d.get('key_objects'))
         result['activity_type']         = _list_to_str_cased(d.get('activity_type'))
         # accept alternate key if present
         result['contributing_context']  = _list_to_str_cased(d.get('contributing_context'))
@@ -251,11 +252,11 @@ def parse_incident_json_broken(json_like) -> dict:
     result['associated_mood']       = grab_str_any('associated_mood')
     # cased tokens for list-like fields
     kw = [_format_token_case(t) for t in grab_list('keywords')]
-    koe = [_format_token_case(t) for t in grab_list('key_objects_entities')]
+    koe = [_format_token_case(t) for t in grab_list('key_objects')]
     act = [_format_token_case(t) for t in grab_list('activity_type')]
     cc = [_format_token_case(t) for t in grab_list('contributing_context')]
     result['keywords']              = ', '.join(kw)  or ''
-    result['key_objects_entities']  = ', '.join(koe) or ''
+    result['key_objects']  = ', '.join(koe) or ''
     result['activity_type']         = ', '.join(act) or ''
     result['contributing_context']  = ', '.join(cc)  or ''
     # primary, with fallbacks
